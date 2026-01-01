@@ -1,0 +1,698 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .moq-collection-grid-{{ section.id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .moq-collection-grid__container-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 20px;
+  }
+
+  .moq-product-card-{{ section.id }} {
+    border: 1px solid {{ section.settings.card_border_color }};
+    border-radius: {{ section.settings.card_border_radius }}px;
+    padding: 16px;
+    background-color: {{ section.settings.card_background_color }};
+    text-align: center;
+    position: relative;
+  }
+
+  .moq-product-card__image-{{ section.id }} {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  .moq-product-card__image-placeholder-{{ section.id }} {
+    width: 100%;
+    height: 200px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .moq-product-card__title-{{ section.id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .moq-product-card__price-{{ section.id }} {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: {{ section.settings.price_color }};
+  }
+
+  .moq-product-card__moq-info-{{ section.id }} {
+    font-size: 12px;
+    color: {{ section.settings.moq_color }};
+    margin-bottom: 12px;
+  }
+
+  .moq-product-card__add-btn-{{ section.id }} {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: {{ section.settings.button_color }};
+    color: {{ section.settings.button_text_color }};
+    border: none;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .moq-product-card__add-btn-{{ section.id }}:hover {
+    background-color: {{ section.settings.button_hover_color }};
+  }
+
+  .moq-product-card__add-btn-{{ section.id }}:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .moq-product-card__quantity-controls-{{ section.id }} {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .moq-product-card__quantity-controls-{{ section.id }}.active {
+    display: flex;
+  }
+
+  .moq-product-card__quantity-btn-{{ section.id }} {
+    width: 36px;
+    height: 36px;
+    border: 1px solid {{ section.settings.quantity_border_color }};
+    background-color: {{ section.settings.quantity_bg_color }};
+    color: {{ section.settings.quantity_text_color }};
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .moq-product-card__quantity-btn-{{ section.id }}:hover:not(:disabled) {
+    background-color: {{ section.settings.quantity_hover_color }};
+  }
+
+  .moq-product-card__quantity-btn-{{ section.id }}:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .moq-product-card__quantity-display-{{ section.id }} {
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: center;
+    color: {{ section.settings.text_color }};
+  }
+
+  .moq-product-card__loading-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+
+  .moq-product-card__loading-{{ section.id }}.active {
+    display: block;
+  }
+
+  .moq-product-card__empty-state-{{ section.id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    grid-column: 1 / -1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .moq-collection-grid__container-{{ section.id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      padding: 0 16px;
+    }
+
+    .moq-product-card-{{ section.id }} {
+      padding: 12px;
+    }
+
+    .moq-product-card__image-{{ section.id }},
+    .moq-product-card__image-placeholder-{{ section.id }} {
+      height: 150px;
+    }
+
+    .moq-product-card__title-{{ section.id }} {
+      font-size: 14px;
+    }
+
+    .moq-product-card__price-{{ section.id }} {
+      font-size: 16px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="moq-collection-grid-{{ section.id }} section-{{ section.id }}-padding">
+    {%- if section.settings.title != blank -%}
+      <div class="title-wrapper center">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    {%- endif -%}
+
+    <moq-collection-grid-{{ section.id }} class="moq-collection-grid-component" data-section-id="{{ section.id }}">
+      {% if section.settings.collection != blank %}
+        <div class="moq-collection-grid__container-{{ section.id }}">
+          {% assign products_to_show = section.settings.collection.products | limit: section.settings.products_limit %}
+          {%- for product in products_to_show -%}
+            {% assign moq = 1 %}
+            {% for tag in product.tags %}
+              {% if tag contains 'MIN' %}
+                {% assign moq_string = tag | remove: 'MIN' %}
+                {% assign moq = moq_string | plus: 0 %}
+                {% if moq > 0 %}
+                  {% break %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+            <div class="moq-product-card-{{ section.id }}" 
+                 data-product-id="{{ product.id }}" 
+                 data-variant-id="{{ product.selected_or_first_available_variant.id }}" 
+                 data-moq="{{ moq }}"
+                 data-available="{{ product.selected_or_first_available_variant.available }}">
+              
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="moq-product-card__image-{{ section.id }}"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {% else %}
+                <div class="moq-product-card__image-placeholder-{{ section.id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+
+              <h3 class="moq-product-card__title-{{ section.id }}">
+                <a href="{{ product.url }}">{{ product.title | escape }}</a>
+              </h3>
+
+              <div class="moq-product-card__price-{{ section.id }}">
+                {{ product.price | money }}
+              </div>
+
+              <div class="moq-product-card__moq-info-{{ section.id }}">
+                MOQ: {{ moq }} units
+              </div>
+
+              {% if product.selected_or_first_available_variant.available %}
+                <button class="moq-product-card__add-btn-{{ section.id }}" data-action="add-to-cart">
+                  Add to Cart ({{ moq }} units)
+                </button>
+
+                <div class="moq-product-card__quantity-controls-{{ section.id }}">
+                  <button class="moq-product-card__quantity-btn-{{ section.id }}" data-action="decrease">
+                    −
+                  </button>
+                  <span class="moq-product-card__quantity-display-{{ section.id }}">{{ moq }}</span>
+                  <button class="moq-product-card__quantity-btn-{{ section.id }}" data-action="increase">
+                    +
+                  </button>
+                </div>
+              {% else %}
+                <button class="moq-product-card__add-btn-{{ section.id }}" disabled>
+                  Sold Out
+                </button>
+              {% endif %}
+
+              <div class="moq-product-card__loading-{{ section.id }}">
+                {% render 'loading-spinner' %}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {% else %}
+        <div class="moq-product-card__empty-state-{{ section.id }}">
+          {{ 'collection-1' | placeholder_svg_tag }}
+          <p>Select a collection to display products</p>
+        </div>
+      {% endif %}
+    </moq-collection-grid-{{ section.id }}>
+  </div>
+</div>
+
+<script>
+  class MOQCollectionGrid{{ section.id }} extends HTMLElement {
+    constructor() {
+      super();
+      this.cartQuantities = new Map();
+      this.sectionId = this.dataset.sectionId;
+    }
+
+    connectedCallback() {
+      this.addEventListener('click', this.handleClick.bind(this));
+      this.loadCartQuantities();
+    }
+
+    handleClick(event) {
+      const action = event.target.getAttribute('data-action');
+      if (!action) return;
+
+      const productCard = event.target.closest(`.moq-product-card-${this.sectionId}`);
+      if (!productCard) return;
+
+      const productId = productCard.getAttribute('data-product-id');
+      const variantId = productCard.getAttribute('data-variant-id');
+      const moq = parseInt(productCard.getAttribute('data-moq'));
+      const available = productCard.getAttribute('data-available') === 'true';
+
+      if (!available) return;
+
+      switch (action) {
+        case 'add-to-cart':
+          this.addToCart(productCard, variantId, moq);
+          break;
+        case 'increase':
+          this.updateQuantity(productCard, variantId, 1, moq);
+          break;
+        case 'decrease':
+          this.updateQuantity(productCard, variantId, -1, moq);
+          break;
+      }
+    }
+
+    async addToCart(productCard, variantId, moq) {
+      this.setLoading(productCard, true);
+
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: moq
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const productId = productCard.getAttribute('data-product-id');
+          this.cartQuantities.set(productId, moq);
+          this.showQuantityControls(productCard, moq);
+          this.updateCartCount();
+          this.dispatchCartUpdate(data);
+        } else {
+          this.handleError(data.description || 'Failed to add to cart');
+        }
+      } catch (error) {
+        this.handleError('Network error occurred');
+      } finally {
+        this.setLoading(productCard, false);
+      }
+    }
+
+    async updateQuantity(productCard, variantId, change, moq) {
+      const productId = productCard.getAttribute('data-product-id');
+      const currentQuantity = this.cartQuantities.get(productId) || moq;
+      const newQuantity = currentQuantity + change;
+
+      if (newQuantity < moq) return;
+
+      this.setLoading(productCard, true);
+
+      try {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: newQuantity
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          this.cartQuantities.set(productId, newQuantity);
+          this.updateQuantityDisplay(productCard, newQuantity, moq);
+          this.updateCartCount();
+          this.dispatchCartUpdate(data);
+        } else {
+          this.handleError(data.description || 'Failed to update quantity');
+        }
+      } catch (error) {
+        this.handleError('Network error occurred');
+      } finally {
+        this.setLoading(productCard, false);
+      }
+    }
+
+    showQuantityControls(productCard, quantity) {
+      const addButton = productCard.querySelector(`.moq-product-card__add-btn-${this.sectionId}`);
+      const controls = productCard.querySelector(`.moq-product-card__quantity-controls-${this.sectionId}`);
+      const display = productCard.querySelector(`.moq-product-card__quantity-display-${this.sectionId}`);
+
+      addButton.style.display = 'none';
+      controls.classList.add('active');
+      display.textContent = quantity;
+
+      this.updateQuantityButtons(productCard, quantity, parseInt(productCard.getAttribute('data-moq')));
+    }
+
+    updateQuantityDisplay(productCard, quantity, moq) {
+      const display = productCard.querySelector(`.moq-product-card__quantity-display-${this.sectionId}`);
+      display.textContent = quantity;
+      this.updateQuantityButtons(productCard, quantity, moq);
+    }
+
+    updateQuantityButtons(productCard, quantity, moq) {
+      const decreaseBtn = productCard.querySelector('[data-action="decrease"]');
+      decreaseBtn.disabled = quantity <= moq;
+    }
+
+    setLoading(productCard, isLoading) {
+      const loadingElement = productCard.querySelector(`.moq-product-card__loading-${this.sectionId}`);
+      const buttons = productCard.querySelectorAll('button');
+      
+      loadingElement.classList.toggle('active', isLoading);
+      buttons.forEach(btn => btn.disabled = isLoading);
+
+      if (!isLoading) {
+        // Re-enable quantity buttons based on current state
+        const quantity = this.cartQuantities.get(productCard.getAttribute('data-product-id'));
+        const moq = parseInt(productCard.getAttribute('data-moq'));
+        if (quantity) {
+          this.updateQuantityButtons(productCard, quantity, moq);
+        }
+      }
+    }
+
+    async loadCartQuantities() {
+      try {
+        const response = await fetch('/cart.js');
+        const cart = await response.json();
+        
+        cart.items.forEach(item => {
+          // Find product cards with this variant
+          const productCards = this.querySelectorAll(`[data-variant-id="${item.variant_id}"]`);
+          productCards.forEach(card => {
+            const productId = card.getAttribute('data-product-id');
+            this.cartQuantities.set(productId, item.quantity);
+            this.showQuantityControls(card, item.quantity);
+          });
+        });
+      } catch (error) {
+        console.log('Could not load cart quantities:', error);
+      }
+    }
+
+    async updateCartCount() {
+      try {
+        const response = await fetch('/cart.js');
+        const cart = await response.json();
+        const cartCountElements = document.querySelectorAll('.cart-count, [data-cart-count]');
+        cartCountElements.forEach(element => {
+          element.textContent = cart.item_count;
+        });
+      } catch (error) {
+        console.log('Could not update cart count:', error);
+      }
+    }
+
+    dispatchCartUpdate(cartData) {
+      document.dispatchEvent(new CustomEvent('cart:updated', { 
+        detail: { cartData, source: 'moq-collection-grid' }
+      }));
+
+      // Also trigger cart drawer/notification updates if they exist
+      const cartNotification = document.querySelector('cart-notification');
+      const cartDrawer = document.querySelector('cart-drawer');
+      
+      if (cartNotification && typeof cartNotification.renderContents === 'function') {
+        cartNotification.renderContents(cartData);
+      }
+      
+      if (cartDrawer && typeof cartDrawer.renderContents === 'function') {
+        cartDrawer.renderContents(cartData);
+      }
+    }
+
+    handleError(message) {
+      console.error('MOQ Collection Grid Error:', message);
+      // You could show a toast notification here if your theme supports it
+    }
+  }
+
+  customElements.define(`moq-collection-grid-{{ section.id }}`, MOQCollectionGrid{{ section.id }});
+</script>
+
+{% schema %}
+{
+  "name": "MOQ Collection Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "moq_color",
+      "label": "MOQ text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Quantity controls"
+    },
+    {
+      "type": "color",
+      "id": "quantity_bg_color",
+      "label": "Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "quantity_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "quantity_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "quantity_hover_color",
+      "label": "Hover background",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOQ Collection Grid"
+    }
+  ]
+}
+{% endschema %}
